@@ -2,5 +2,7 @@
 name = "dotsh"
 version = "0.0.1"
 edition = "2024"
+description = "Convert dotenv-style key-value pairs to shell-specific environment export commands"
+license = "MIT"
 
 [dependencies]
