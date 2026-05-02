@@ -16,8 +16,9 @@ fn main() {
     let shell = args[1].to_lowercase();
     let input = args[2..].join("\n");
 
+    let mut lines = Vec::new();
     for (key, value) in dotenv::parse(&input) {
-        let output = match shell.as_str() {
+        let line = match shell.as_str() {
             "bash" | "zsh" | "sh" => bash::format(&key, &value),
             "pwsh" | "powershell" => pwsh::format(&key, &value),
             "fish" => fish::format(&key, &value),
@@ -28,6 +29,8 @@ fn main() {
             }
         };
 
-        println!("{}", output);
+        lines.push(line);
     }
+
+    print!("{}", lines.join("\n"));
 }
