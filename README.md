@@ -52,6 +52,31 @@ dotsh <shell> <dotenv-line> [<dotenv-line> ...]
 
 Shell names are case-insensitive.
 
+### Initialize from a directory
+
+```bash
+eval "$(dotsh init bash --home "${DOTFILES_DIR:-$HOME/.dotfiles}")"
+```
+
+`--home` is required and selects the directory containing your environment and PATH files. It does not change `HOME`. There is no config file, automatic directory discovery, or dependency on a dotfiles layout outside the files below.
+
+The platform suffix is `win` on Windows, `mac` on macOS, `wsl` in WSL, and `linux` on other Linux systems.
+
+| File | Behavior |
+|------|----------|
+| `.path.<platform>` | Append one directory per line to PATH, skipping duplicates |
+| `.env` | Load shared environment values |
+| `.env.<platform>` | Override shared environment values for this platform |
+| `.local/.env` | Load local overrides last |
+
+Missing files are skipped. Relative PATH entries are kept as written, matching the existing shell behavior. Environment files use the same literal `KEY=VALUE` parsing as the conversion command; variable references and quotes are not expanded or interpreted.
+
+Files are read directly by `dotsh`. For POSIX shells on Windows, nonempty PATH files are converted in one batched `cygpath` invocation. PATH deduplication for POSIX shells uses the shell's live PATH rather than the native Windows process PATH.
+
+All output is generated before anything is printed. Invalid arguments, unreadable files, invalid environment variable names, and failed path conversions exit with an error and no stdout.
+
+The other supported shells can also use `dotsh init <shell> --home <directory>` and evaluate its output with their usual mechanism.
+
 ### Basic examples
 
 ```bash
